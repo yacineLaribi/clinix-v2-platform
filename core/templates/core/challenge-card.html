@@ -1,29 +1,51 @@
-<a href="{% url "core:challenge_details" challenge.id %}" class="block">
-    <div class="rounded-lg border bg-card text-card-foreground shadow-sm h-full transition-all hover:shadow-md">
-        <div class="flex flex-col space-y-1.5 p-6 pb-3">
-            <div class="flex items-center justify-between">
-                <span class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary text-primary-foreground hover:bg-primary/80">
+<a href="{% url 'core:challenge_details' challenge.id %}" class="block group">
+    <div class="h-full bg-white rounded-2xl border border-neutral-200 overflow-hidden transition-all duration-300 hover:border-primary-300 hover:shadow-xl">
+        <!-- Header with badges -->
+        <div class="p-6 pb-4">
+            <div class="flex items-center justify-between mb-4">
+                <span class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold bg-primary-100 text-primary-700 border border-primary-200">
                     {{ challenge.type }}
                 </span>
-                <span class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground">
-                    {{ challenge.points }} pts
-                </span>
+                <div class="flex items-center gap-2">
+                    <span class="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold bg-neutral-100 text-neutral-700 border border-neutral-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1.5">
+                            <circle cx="12" cy="8" r="6"></circle>
+                            <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
+                        </svg>
+                        {{ challenge.points }} pts
+                    </span>
+                </div>
             </div>
-            <h3 class="text-lg font-semibold leading-none tracking-tight pt-2">{{ challenge.title }}</h3>
+            
+            <h3 class="text-xl font-bold text-neutral-900 mb-2 group-hover:text-primary-600 transition-colors">
+                {{ challenge.title }}
+            </h3>
+            
+            <p class="text-sm text-neutral-600 line-clamp-2">
+                {{ challenge.description|default:"Solve this clinical challenge to test your diagnostic skills." }}
+            </p>
         </div>
-        <div class="p-6 pt-0">
-            <div class="flex items-center gap-2 text-sm text-muted-foreground">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+
+        <!-- Divider -->
+        <div class="border-t border-neutral-100"></div>
+
+        <!-- Footer -->
+        <div class="p-6 pt-4 flex items-center justify-between">
+            <div class="flex items-center gap-2 text-sm text-neutral-600">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
                     <circle cx="12" cy="7" r="4"></circle>
                 </svg>
-                <span>{{ challenge.author }}</span>
+                <span class="font-medium">{{ challenge.author }}</span>
             </div>
-        </div>
-        <div class="p-6 pt-0">
-            <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full">
-                Solve Challenge
-            </button>
+            
+            <div class="inline-flex items-center text-sm font-semibold text-primary-600 group-hover:translate-x-1 transition-transform">
+                Commencer
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-1">
+                    <path d="M5 12h14"></path>
+                    <path d="m12 5 7 7-7 7"></path>
+                </svg>
+            </div>
         </div>
     </div>
 </a>

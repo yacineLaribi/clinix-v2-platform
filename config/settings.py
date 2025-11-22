@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    "jazzmin",  
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -69,6 +70,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
+
+
 
 
 # Database
@@ -133,3 +136,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTHENTICATION_BACKENDS = ['core.backends.TeamNameBackend']
 AUTH_USER_MODEL = 'core.CustomUser'
+
+
+
+#Jazmin styling 
+JAZZMIN_SETTINGS = {
+    "site_title": "CLINIX",
+    "site_header": "CLINIX",
+    "welcome_sign": "Welcome back 👋",
+    "show_ui_builder": True,
+}

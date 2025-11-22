@@ -42,7 +42,8 @@ class Submission(models.Model):
     submission_time = models.DateTimeField(auto_now_add=True)
     solution = models.TextField()
     is_correct = models.BooleanField(default=False)
-
+    is_false = models.BooleanField(default=False)
+    
     def __str__(self):
         return f"{self.user.username} - {self.challenge.title} - {self.challenge.author}"
     
@@ -54,3 +55,7 @@ class UserHint(models.Model):
 
     class Meta:
         unique_together = ('user', 'hint')
+    
+    def __str__(self):
+        return f"{self.user.username} - {self.hint.title}"
+    

@@ -33,10 +33,12 @@ def logout_view(request):
     return redirect('core:login')  # back to login page
 
 from .models import Challenge
-@login_required
 def challenges(request):
-    challenges = Challenge.objects.all()  # Assuming you have a Challenge model
-    challenges = challenges.filter(is_visible=True)  # Filter visible challenges
+    if not request.user.is_authenticated:
+        messages.error(request, 'You have to login to access this page')
+        return redirect('core:login')
+
+    challenges = Challenge.objects.filter(is_visible=True)
     for challenge in challenges:
         challenge.is_submitted = Submission.objects.filter(user=request.user, challenge=challenge).exists()
 

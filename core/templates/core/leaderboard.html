@@ -1,146 +1,249 @@
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Challenges - CLINIX</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        border: "hsl(214.3 31.8% 91.4%)",
-                        input: "hsl(214.3 31.8% 91.4%)",
-                        ring: "hsl(221.2 83.2% 53.3%)",
-                        background: "hsl(0 0% 100%)",
-                        foreground: "hsl(222.2 84% 4.9%)",
-                        primary: {
-                            DEFAULT: "hsl(221.2 83.2% 53.3%)",
-                            foreground: "hsl(210 40% 98%)",
-                        },
-                        secondary: {
-                            DEFAULT: "hsl(210 40% 96.1%)",
-                            foreground: "hsl(222.2 47.4% 11.2%)",
-                        },
-                        muted: {
-                            DEFAULT: "hsl(210 40% 96.1%)",
-                            foreground: "hsl(215.4 16.3% 46.9%)",
-                        },
-                        accent: {
-                            DEFAULT: "hsl(210 40% 96.1%)",
-                            foreground: "hsl(222.2 47.4% 11.2%)",
-                        },
-                        destructive: {
-                            DEFAULT: "hsl(0 84.2% 60.2%)",
-                            foreground: "hsl(210 40% 98%)",
-                        },
-                        blue: {
-                            600: "#2563eb",
-                        },
-                    },
-                    borderRadius: {
-                        lg: "0.5rem",
-                        md: "calc(0.5rem - 2px)",
-                        sm: "calc(0.5rem - 4px)",
-                    },
-                },
-            },
-        };
-    </script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-    </style>
-</head>
-<body class="bg-background text-foreground">
-    <div class="flex min-h-screen flex-col">
-        <header class="sticky top-0 z-50 w-full border-b bg-background shadow-md">
-            <div class="container mx-auto flex h-16 items-center justify-between px-4">
-                <div class="flex items-center gap-6">
-                    <a href="{% url "core:index" %}" class="flex items-center gap-2 text-primary font-bold text-lg">
-                        CLINIX
-                    </a>
-                    <nav class="hidden md:flex gap-6">
-                        <a href="{% url "core:challenges" %}" class="text-sm font-medium text-foreground transition-colors hover:text-primary">
-                            Challenges
-                        </a>
-                        <a href="{% url "core:profile" %}" class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
-                            Profile
-                        </a>
-                    </nav>
-                </div>
-                <div class="flex items-center gap-2">
-                    <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10 md:hidden" id="mobile-menu-button">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
-                            <line x1="4" x2="20" y1="12" y2="12"></line>
-                            <line x1="4" x2="20" y1="6" y2="6"></line>
-                            <line x1="4" x2="20" y1="18" y2="18"></line>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-            
-            <div class="hidden md:hidden" id="mobile-menu">
-                <div class="space-y-1 px-4 py-3 border-t">
-                    <a href="{% url "core:challenges" %}" class="block text-sm font-medium text-foreground hover:bg-accent hover:text-accent-foreground rounded-md px-3 py-2">
-                        Challenges
-                    </a>
-                    <a href="#" class="block text-sm font-medium text-muted-foreground hover:bg-accent hover:text-accent-foreground rounded-md px-3 py-2">
-                        Leaderboard
-                    </a>
-                </div>
-            </div>
-        </header>
+{% extends 'base.html' %}
 
-        <main class="flex-1 container mx-auto px-4 py-8">
-            <div class="leaderboard-container bg-white shadow-lg rounded-lg p-6">
-                <h1 class="text-2xl font-bold text-center mb-6 text-primary">Leaderboard</h1>
-                <table class="w-full border-collapse border border-gray-200">
-                    <thead>
-                        <tr class="bg-gray-100">
-                            <th class="border border-gray-200 px-4 py-2 text-left text-sm font-medium text-gray-600">Rank</th>
-                            <th class="border border-gray-200 px-4 py-2 text-left text-sm font-medium text-gray-600">Username</th>
-                            <th class="border border-gray-200 px-4 py-2 text-left text-sm font-medium text-gray-600">Score</th>
-                        </tr>
-                    </thead>
-                    <tbody id="leaderboard-body" class="divide-y divide-gray-200">
-                        <!-- Data will be dynamically rendered here -->
-                    </tbody>
-                </table>
-            </div>
-        </main>
+{% block title %}Leaderboard - CLINIX{% endblock %}
+
+{% block content %}
+<div class="container mx-auto py-12 px-4 lg:px-8">
+  <!-- Header Section -->
+  <div class="text-center mb-12">
+    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-50 border border-primary-200 mb-4">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary-600">
+        <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+        <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+        <path d="M4 22h16"></path>
+        <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+        <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+        <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+      </svg>
+      <span class="text-sm font-medium text-primary-700">Top Performers</span>
     </div>
+    
+    <h1 class="text-4xl lg:text-5xl font-bold tracking-tight text-neutral-900 mb-4">
+      Leaderboard
+    </h1>
+    <p class="text-lg text-neutral-600 max-w-2xl mx-auto">
+      See how you rank against other medical students solving clinical challenges
+    </p>
+  </div>
 
-    <script>
-        async function fetchLeaderboardData() {
-            try {
-                const response = await fetch('../api/leaderboard/');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch leaderboard data');
-                }
-                const data = await response.json();
-                const leaderboardBody = document.getElementById('leaderboard-body');
-                leaderboardBody.innerHTML = '';
+  <!-- Top 3 Podium -->
+  <div class="max-w-4xl mx-auto mb-12">
+    <div class="grid grid-cols-3 gap-4 items-end" id="podium">
+      <!-- 2nd Place -->
+      <div class="text-center">
+        <div class="bg-white rounded-2xl border border-neutral-200 p-6 mb-4 hover:shadow-lg transition-all">
+          <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-neutral-200 flex items-center justify-center text-2xl font-bold text-neutral-600">
+            2
+          </div>
+          <div class="w-12 h-12 mx-auto mb-3 rounded-full bg-gradient-to-br from-neutral-300 to-neutral-400 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+              <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+              <path d="M4 22h16"></path>
+              <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+              <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+              <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+            </svg>
+          </div>
+          <h3 class="font-bold text-lg text-neutral-900 mb-1" id="second-name">-</h3>
+          <p class="text-2xl font-bold text-neutral-600" id="second-score">-</p>
+        </div>
+      </div>
 
-                data.forEach((user, index) => {
-                    const row = document.createElement('tr');
-                    row.classList.add('hover:bg-gray-50');
-                    row.innerHTML = `
-                        <td class="border border-gray-200 px-4 py-2 text-sm">${index + 1}</td>
-                        <td class="border border-gray-200 px-4 py-2 text-sm">${user.teamname}</td>
-                        <td class="border border-gray-200 px-4 py-2 text-sm">${user.score}</td>
-                    `;
-                    leaderboardBody.appendChild(row);
-                });
-            } catch (error) {
-                console.error('Error fetching leaderboard data:', error);
-            }
+      <!-- 1st Place -->
+      <div class="text-center">
+        <div class="bg-white rounded-2xl border-2 border-primary-300 p-6 mb-4 hover:shadow-xl transition-all relative">
+          <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
+            <div class="bg-primary-600 text-white text-xs font-bold px-3 py-1 rounded-full">
+              Champion
+            </div>
+          </div>
+          <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-primary-100 flex items-center justify-center text-3xl font-bold text-primary-600">
+            1
+          </div>
+          <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-gradient-to-br from-yellow-300 to-yellow-500 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+              <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+              <path d="M4 22h16"></path>
+              <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+              <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+              <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+            </svg>
+          </div>
+          <h3 class="font-bold text-xl text-neutral-900 mb-1" id="first-name">-</h3>
+          <p class="text-3xl font-bold text-primary-600" id="first-score">-</p>
+        </div>
+      </div>
+
+      <!-- 3rd Place -->
+      <div class="text-center">
+        <div class="bg-white rounded-2xl border border-neutral-200 p-6 mb-4 hover:shadow-lg transition-all">
+          <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-orange-100 flex items-center justify-center text-2xl font-bold text-orange-600">
+            3
+          </div>
+          <div class="w-12 h-12 mx-auto mb-3 rounded-full bg-gradient-to-br from-orange-300 to-orange-500 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+              <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+              <path d="M4 22h16"></path>
+              <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+              <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+              <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+            </svg>
+          </div>
+          <h3 class="font-bold text-lg text-neutral-900 mb-1" id="third-name">-</h3>
+          <p class="text-2xl font-bold text-orange-600" id="third-score">-</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Full Leaderboard Table -->
+  <div class="bg-white rounded-2xl border border-neutral-200 overflow-hidden max-w-4xl mx-auto">
+    <div class="overflow-x-auto">
+      <table class="w-full">
+        <thead>
+          <tr class="bg-neutral-50 border-b border-neutral-200">
+            <th class="px-6 py-4 text-left text-sm font-semibold text-neutral-700 w-20">Rank</th>
+            <th class="px-6 py-4 text-left text-sm font-semibold text-neutral-700">Team Name</th>
+            <th class="px-6 py-4 text-right text-sm font-semibold text-neutral-700">Score</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboard-body" class="divide-y divide-neutral-100">
+          <!-- Loading State -->
+          <tr>
+            <td colspan="3" class="px-6 py-12 text-center">
+              <div class="inline-flex items-center gap-3 text-neutral-600">
+                <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Loading leaderboard...
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  async function fetchLeaderboardData() {
+    try {
+      const response = await fetch('../api/leaderboard/');
+      if (!response.ok) {
+        throw new Error('Failed to fetch leaderboard data');
+      }
+      const data = await response.json();
+      
+      // Check if top 3 have different scores
+      const hasDistinctTop3 = data.length >= 3 && 
+        data[0].score !== data[1].score && 
+        data[1].score !== data[2].score &&
+        data[0].score !== data[2].score;
+      
+      // Update podium (top 3) only if scores are distinct
+      if (hasDistinctTop3) {
+        document.getElementById('first-name').textContent = data[0].teamname;
+        document.getElementById('first-score').textContent = data[0].score;
+        document.getElementById('second-name').textContent = data[1].teamname;
+        document.getElementById('second-score').textContent = data[1].score;
+        document.getElementById('third-name').textContent = data[2].teamname;
+        document.getElementById('third-score').textContent = data[2].score;
+      } else {
+        // Hide podium if scores are not distinct
+        document.getElementById('podium').parentElement.style.display = 'none';
+      }
+
+      // Update full table
+      const leaderboardBody = document.getElementById('leaderboard-body');
+      leaderboardBody.innerHTML = '';
+
+      if (data.length === 0) {
+        leaderboardBody.innerHTML = `
+          <tr>
+            <td colspan="3" class="px-6 py-12 text-center text-neutral-600">
+              No leaderboard data available yet
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      data.forEach((user, index) => {
+        const row = document.createElement('tr');
+        row.classList.add('hover:bg-neutral-50', 'transition-colors');
+        
+        // Only highlight and show medals if scores are distinct
+        const isTopThree = index < 3 && hasDistinctTop3;
+        
+        if (isTopThree) {
+          row.classList.add('bg-primary-50/30');
+        }
+        
+        // Medal icons only for top 3 with distinct scores
+        let rankContent = `<span class="font-semibold text-neutral-900">${index + 1}</span>`;
+        if (isTopThree && index === 0) {
+          rankContent = `
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🥇</span>
+              <span class="font-bold text-primary-600">${index + 1}</span>
+            </div>
+          `;
+        } else if (isTopThree && index === 1) {
+          rankContent = `
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🥈</span>
+              <span class="font-bold text-neutral-600">${index + 1}</span>
+            </div>
+          `;
+        } else if (isTopThree && index === 2) {
+          rankContent = `
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🥉</span>
+              <span class="font-bold text-orange-600">${index + 1}</span>
+            </div>
+          `;
         }
 
-        // Fetch leaderboard data on page load
-        document.addEventListener('DOMContentLoaded', fetchLeaderboardData);
-    </script>
-</body>
-</html>
+        row.innerHTML = `
+          <td class="px-6 py-4 text-sm">${rankContent}</td>
+          <td class="px-6 py-4 text-sm">
+            <span class="font-medium text-neutral-900">${user.teamname}</span>
+          </td>
+          <td class="px-6 py-4 text-sm text-right">
+            <span class="inline-flex items-center gap-1.5 font-semibold text-neutral-900">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary-600">
+                <circle cx="12" cy="8" r="6"></circle>
+                <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
+              </svg>
+              ${user.score}
+            </span>
+          </td>
+        `;
+        leaderboardBody.appendChild(row);
+      });
+    } catch (error) {
+      console.error('Error fetching leaderboard data:', error);
+      const leaderboardBody = document.getElementById('leaderboard-body');
+      leaderboardBody.innerHTML = `
+        <tr>
+          <td colspan="3" class="px-6 py-12 text-center">
+            <div class="text-red-600 mb-2">Failed to load leaderboard data</div>
+            <button onclick="fetchLeaderboardData()" class="text-sm text-primary-600 hover:text-primary-700 font-medium">
+              Try again
+            </button>
+          </td>
+        </tr>
+      `;
+    }
+  }
+
+  // Fetch leaderboard data on page load
+  document.addEventListener('DOMContentLoaded', fetchLeaderboardData);
+</script>
+{% endblock %}

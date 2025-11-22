@@ -1,150 +1,68 @@
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Challenges - CLINIX</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            border: "hsl(214.3 31.8% 91.4%)",
-            input: "hsl(214.3 31.8% 91.4%)",
-            ring: "hsl(221.2 83.2% 53.3%)",
-            background: "hsl(0 0% 100%)",
-            foreground: "hsl(222.2 84% 4.9%)",
-            primary: {
-              DEFAULT: "hsl(221.2 83.2% 53.3%)",
-              foreground: "hsl(210 40% 98%)",
-            },
-            secondary: {
-              DEFAULT: "hsl(210 40% 96.1%)",
-              foreground: "hsl(222.2 47.4% 11.2%)",
-            },
-            muted: {
-              DEFAULT: "hsl(210 40% 96.1%)",
-              foreground: "hsl(215.4 16.3% 46.9%)",
-            },
-            accent: {
-              DEFAULT: "hsl(210 40% 96.1%)",
-              foreground: "hsl(222.2 47.4% 11.2%)",
-            },
-            destructive: {
-              DEFAULT: "hsl(0 84.2% 60.2%)",
-              foreground: "hsl(210 40% 98%)",
-            },
-            blue: {
-              600: "#2563eb",
-            },
-          },
-          borderRadius: {
-            lg: "0.5rem",
-            md: "calc(0.5rem - 2px)",
-            sm: "calc(0.5rem - 4px)",
-          },
-        },
-      },
-    };
-  </script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-    body {
-      font-family: 'Inter', sans-serif;
-    }
-  </style>
-</head>
-<body class="bg-background text-foreground">
-  <div class="flex min-h-screen flex-col">
-    <header class="sticky top-0 z-50 w-full border-b bg-background">
-      <div class="container mx-auto flex h-16 items-center justify-between px-4">
-        <div class="flex items-center gap-6">
-          <a href="{% url "core:index" %}" class="flex items-center gap-2">
-            <span class="font-bold">CLINIX</span>
-          </a>
-          <nav class="hidden md:flex gap-6">
-            <a href="{% url "core:challenges" %}" class="text-sm font-medium text-foreground transition-colors hover:text-primary">
-              Challenges
-            </a>
-            <a href="{% url "core:profile" %}" class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
-              Profile
-            </a>
-            <a href="{% url "core:leaderboard" %}" class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
-              Leaderboard
-            </a>
-          </nav>
-        </div>
-        <div class="flex items-center gap-2">
-          <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10 md:hidden" id="mobile-menu-button">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
-              <line x1="4" x2="20" y1="12" y2="12"></line>
-              <line x1="4" x2="20" y1="6" y2="6"></line>
-              <line x1="4" x2="20" y1="18" y2="18"></line>
-            </svg>
-          </button>
-        </div>
-      </div>
-      
-      <div class="hidden md:hidden" id="mobile-menu">
-        <div class="space-y-1 px-4 py-3 border-t">
-          <a href="{% url "core:challenges" %}" class="block text-sm font-medium text-foreground hover:bg-accent hover:text-accent-foreground rounded-md px-3 py-2">
-            Challenges
-          </a>
-          <a href="{% url "core:leaderboard" %}" class="block text-sm font-medium text-muted-foreground hover:bg-accent hover:text-accent-foreground rounded-md px-3 py-2">
-            Leaderboard
-          </a>
+{% extends 'base.html' %}
 
-          </a>
-          <a href="{% url "core:index" %}" class="block text-sm font-medium text-muted-foreground hover:bg-accent hover:text-accent-foreground rounded-md px-3 py-2">
-            Home
-          </a>
-        </div>
-      </div>
-    </header>
+{% block title %}Défis - CLINIX{% endblock %}
 
-    <main class="flex-1">
-      <div class="container mx-auto py-8 px-4">
-        <div class="flex items-center justify-between mb-8">
-          <h1 class="text-3xl font-bold tracking-tight">Medical Challenges</h1>
-        </div>
-
-        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {% for challenge in challenges %}
-              {% if challenge.is_submitted %}
-                {% include "core/challenge-card-submitted.html" %}
-              
-              {% else %}
-                {% include "core/challenge-card.html" %}
-              {% endif %}
-            {% endfor %}
-        </div>
+{% block content %}
+<div class="container mx-auto py-12 px-4 lg:px-8">
+  <!-- Header Section -->
+  <div class="mb-12">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div>
+        <h1 class="text-4xl font-bold tracking-tight text-neutral-900 mb-2">
+          Défis médicaux
+        </h1>
+        <p class="text-lg text-neutral-600">
+          Testez vos compétences diagnostiques avec des cas cliniques réels
+        </p>
       </div>
-    </main>
-
-    <footer class="border-t py-6">
-      <div class="container mx-auto flex flex-col items-center justify-between gap-4 md:flex-row px-4">
-        <p class="text-sm text-muted-foreground">© 2025 CLINIX. All rights reserved.</p>
-        <nav class="flex gap-4 text-sm text-muted-foreground">
-          <a href="#" class="hover:underline">About</a>
-          <a href="#" class="hover:underline">Contact</a>
-          <a href="#" class="hover:underline">Privacy</a>
-          <a href="#" class="hover:underline">Terms</a>
-        </nav>
+      <div class="flex items-center gap-3">
+        <button class="inline-flex items-center justify-center rounded-lg text-sm font-medium transition-all h-10 px-4 border-2 border-neutral-300 text-neutral-700 hover:border-neutral-400 hover:bg-neutral-50">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+            <line x1="4" y1="21" x2="4" y2="14"></line>
+            <line x1="4" y1="10" x2="4" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12" y2="3"></line>
+            <line x1="20" y1="21" x2="20" y2="16"></line>
+            <line x1="20" y1="12" x2="20" y2="3"></line>
+            <line x1="1" y1="14" x2="7" y2="14"></line>
+            <line x1="9" y1="8" x2="15" y2="8"></line>
+            <line x1="17" y1="16" x2="23" y2="16"></line>
+          </svg>
+          Filtres
+        </button>
       </div>
-    </footer>
+    </div>
   </div>
 
-  <script>
-    // Mobile menu toggle
-    document.getElementById('mobile-menu-button').addEventListener('click', function() {
-      const mobileMenu = document.getElementById('mobile-menu');
-      mobileMenu.classList.toggle('hidden');
-    });
-    
-    // User menu toggle (can be expanded if needed)
-    document.getElementById('user-menu-button').addEventListener('click', function() {
-      // Toggle user dropdown menu
-    });
-  </script>
-</body>
-</html>
+  <!-- Stats Overview -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+    <div class="bg-white rounded-xl p-6 border border-neutral-200">
+      <div class="text-2xl font-bold text-neutral-900">{{ challenges|length }}</div>
+      <div class="text-sm text-neutral-600 mt-1">Nombre total de défis</div>
+    </div>
+    <div class="bg-white rounded-xl p-6 border border-neutral-200">
+      <div class="text-2xl font-bold text-primary-600">12</div>
+      <div class="text-sm text-neutral-600 mt-1">Résolus</div>
+    </div>
+    <div class="bg-white rounded-xl p-6 border border-neutral-200">
+      <div class="text-2xl font-bold text-neutral-900">850</div>
+      <div class="text-sm text-neutral-600 mt-1">Points totaux</div>
+    </div>
+    <div class="bg-white rounded-xl p-6 border border-neutral-200">
+      <div class="text-2xl font-bold text-neutral-900">65%</div>
+      <div class="text-sm text-neutral-600 mt-1">Taux de réussite</div>
+    </div>
+  </div>
+
+  <!-- Challenges Grid -->
+  <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    {% for challenge in challenges %}
+      {% if challenge.is_submitted %}
+        {% include "core/challenge-card-submitted.html" %}
+      {% else %}
+        {% include "core/challenge-card.html" %}
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

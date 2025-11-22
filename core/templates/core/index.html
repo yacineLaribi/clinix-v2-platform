@@ -1,190 +1,159 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CLINIX - Medical CTF Platform</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            border: "hsl(214.3 31.8% 91.4%)",
-            input: "hsl(214.3 31.8% 91.4%)",
-            ring: "hsl(221.2 83.2% 53.3%)",
-            background: "hsl(0 0% 100%)",
-            foreground: "hsl(222.2 84% 4.9%)",
-            primary: {
-              DEFAULT: "hsl(221.2 83.2% 53.3%)",
-              foreground: "hsl(210 40% 98%)",
-            },
-            secondary: {
-              DEFAULT: "hsl(210 40% 96.1%)",
-              foreground: "hsl(222.2 47.4% 11.2%)",
-            },
-            muted: {
-              DEFAULT: "hsl(210 40% 96.1%)",
-              foreground: "hsl(215.4 16.3% 46.9%)",
-            },
-            accent: {
-              DEFAULT: "hsl(210 40% 96.1%)",
-              foreground: "hsl(222.2 47.4% 11.2%)",
-            },
-            destructive: {
-              DEFAULT: "hsl(0 84.2% 60.2%)",
-              foreground: "hsl(210 40% 98%)",
-            },
-            blue: {
-              50: "#eff6ff",
-              100: "#dbeafe",
-              600: "#2563eb",
-              700: "#1d4ed8",
-            },
-          },
-          borderRadius: {
-            lg: "0.5rem",
-            md: "calc(0.5rem - 2px)",
-            sm: "calc(0.5rem - 4px)",
-          },
-        },
-      },
-    };
-  </script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-    body {
-      font-family: 'Inter', sans-serif;
-    }
-  </style>
-</head>
-<body class="bg-background text-foreground">
-  <div class="flex min-h-screen flex-col">
-    <!-- Navbar -->
-    <header class="sticky top-0 z-50 w-full border-b bg-background">
-      <div class="container mx-auto flex h-16 items-center justify-between px-4">
-        <div class="flex items-center gap-6">
-          <a href="{% url "core:index" %}" class="flex items-center gap-2">
-            <span class="font-bold">CLINIX</span>
-          </a>
-        </div>
-        <div class="flex items-center gap-2">
+{% extends 'base.html' %}
 
-           {% if request.user.is_authenticated %}
-                <a href="{% url "core:logout" %}">
-                     <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">Logout</button>
-                </a>
-           {% else %}
-                <a href="{% url "core:login" %}">
-                    <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">Login</button>
-                </a>
-           {% endif %}
+{% block title %}CLINIX - Plateforme Médicale CTF{% endblock %}
+
+{% block content %}
+<!-- Section Héros -->
+<section class="py-20 lg:py-32 bg-white">
+  <div class="container mx-auto px-4 lg:px-8">
+    <div class="max-w-4xl mx-auto text-center">
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-50 border border-primary-200 mb-6">
+        <span class="w-2 h-2 rounded-full bg-primary-600 animate-pulse"></span>
+        <span class="text-sm font-medium text-primary-700">La Pensée Médicale Redessinée avec CLINIX</span>
+      </div>
+      
+      <h1 class="text-5xl lg:text-6xl font-bold tracking-tight text-neutral-900 mb-6">
+        Maîtrisez la Pensée Clinique avec
+        <span class="text-primary-600">CLINIX V2.0</span>
+      </h1>
+      
+      <p class="text-xl text-neutral-600 mb-10 max-w-2xl mx-auto leading-relaxed">
+        Une plateforme de Capture The Flag à la pointe de la technologie conçue pour les étudiants en santé afin de résoudre des cas cliniques réels et d'affiner leur expertise diagnostique
+      </p>
+      
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <a href="{% if request.user.is_authenticated %}{% url 'core:challenges' %}{% else %}{% url 'core:login' %}{% endif %}">
+          <button class="inline-flex items-center justify-center rounded-lg text-base font-semibold transition-all h-12 px-8 bg-primary-600 text-white hover:bg-primary-700 active:scale-95 shadow-lg shadow-primary-600/30">
+            Commencer
+            <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </button>
+        </a>
+        <a href="{% if request.user.is_authenticated %}{% url 'core:challenges' %}{% else %}{% url 'core:login' %}{% endif %}">
+          <button class="inline-flex items-center justify-center rounded-lg text-base font-semibold transition-all h-12 px-8 border-2 border-neutral-300 text-neutral-700 hover:border-neutral-400 hover:bg-neutral-50 active:scale-95">
+            Voir les Défis
+          </button>
+        </a>
+      </div>
+
+      <div class="mt-16 grid grid-cols-2 gap-8 max-w-2xl mx-auto">
+        <div class="text-center">
+          <div class="text-3xl font-bold text-neutral-900">40+</div>
+          <div class="text-sm text-neutral-600 mt-1">Cas Cliniques</div>
+        </div>
+        <div class="text-center border-l border-neutral-200">
+          <div class="text-3xl font-bold text-neutral-900">50+</div>
+          <div class="text-sm text-neutral-600 mt-1">Étudiants</div>
         </div>
       </div>
-    </header>
-
-    <!-- Main Content -->
-    <main class="flex-1">
-      <!-- Hero Section -->
-      <section class="py-20 bg-gradient-to-b from-blue-50 to-white">
-        <div class="container mx-auto grid gap-6 text-center px-4">
-          <h1 class="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
-            Welcome to <span class="text-blue-600">CLINIX</span>
-          </h1>
-          <p class="max-w-3xl mx-auto text-xl text-muted-foreground">
-            A medical Capture The Flag platform for healthcare students to solve clinical cases and improve diagnostic
-            skills
-          </p>
-          <div class="flex justify-center gap-4 mt-6">
-            <a href="{% url "core:login" %}">
-              <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-600 text-primary-foreground hover:bg-blue-700 h-11 px-8">
-                Get Started
-              </button>
-            </a>
-            <a href="{% url "core:challenges" %}">
-              <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-11 px-8">
-                View Challenges
-              </button>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <!-- Features Section -->
-      <section class="py-16 container mx-auto px-4">
-        <div class="grid gap-12 md:grid-cols-3">
-          <!-- Feature 1 -->
-          <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
-            <div class="p-6">
-              <div class="mb-4 text-center">
-                <div class="inline-flex items-center justify-center p-3 rounded-full bg-blue-100">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-blue-600">
-                    <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-                  </svg>
-                </div>
-              </div>
-              <h3 class="text-xl font-bold text-center">Clinical Challenges</h3>
-              <p class="text-center text-muted-foreground mt-2">
-                Solve real-world medical cases with varying levels of difficulty
-              </p>
-            </div>
-          </div>
-
-          <!-- Feature 2 -->
-          <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
-            <div class="p-6">
-              <div class="mb-4 text-center">
-                <div class="inline-flex items-center justify-center p-3 rounded-full bg-blue-100">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-blue-600">
-                    <circle cx="12" cy="12" r="10" />
-                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-                    <path d="M12 17h.01" />
-                  </svg>
-                </div>
-              </div>
-              <h3 class="text-xl font-bold text-center">Medical Imaging Hints</h3>
-              <p class="text-center text-muted-foreground mt-2">
-                Request MRIs, CT scans, and other imaging to help with your diagnosis
-              </p>
-            </div>
-          </div>
-
-          <!-- Feature 3 -->
-          <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
-            <div class="p-6">
-              <div class="mb-4 text-center">
-                <div class="inline-flex items-center justify-center p-3 rounded-full bg-blue-100">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-blue-600">
-                    <path d="M2 20h.01" />
-                    <path d="M7 20v-4" />
-                    <path d="M12 20v-8" />
-                    <path d="M17 20v-6" />
-                    <path d="M22 20V8" />
-                  </svg>
-                </div>
-              </div>
-              <h3 class="text-xl font-bold text-center">Team Competition</h3>
-              <p class="text-center text-muted-foreground mt-2">
-                Form teams, compete on the leaderboard, and improve together
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="border-t py-6">
-      <div class="container mx-auto flex flex-col items-center justify-between gap-4 md:flex-row px-4">
-        <p class="text-sm text-muted-foreground">© 2025 CLINIX. All rights reserved.</p>
-        <nav class="flex gap-4 text-sm text-muted-foreground">
-          <a href="#" class="hover:underline">About</a>
-          <a href="#" class="hover:underline">Contact</a>
-          <a href="#" class="hover:underline">Privacy</a>
-          <a href="#" class="hover:underline">Terms</a>
-        </nav>
-      </div>
-    </footer>
+    </div>
   </div>
-</body>
-</html>
+</section>
+
+<!-- Section Caractéristiques -->
+<section class="py-20 bg-neutral-50">
+  <div class="container mx-auto px-4 lg:px-8">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl lg:text-4xl font-bold text-neutral-900 mb-4">
+        Tout ce dont vous avez besoin pour exceller
+      </h2>
+      <p class="text-lg text-neutral-600 max-w-2xl mx-auto">
+        Outils et ressources complets conçus pour améliorer votre parcours éducatif médical
+      </p>
+    </div>
+
+    <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
+      <!-- Caractéristique 1 -->
+      <div class="group bg-white rounded-2xl p-8 border border-neutral-200 hover:border-primary-300 hover:shadow-xl transition-all duration-300">
+        <div class="w-14 h-14 rounded-xl bg-primary-100 flex items-center justify-center mb-6 group-hover:bg-primary-600 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-7 h-7 text-primary-600 group-hover:text-white transition-colors">
+            <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold text-neutral-900 mb-3">Défis Cliniques</h3>
+        <p class="text-neutral-600 leading-relaxed">
+          Résolvez des cas médicaux authentiques couvrant plusieurs spécialités avec des niveaux de difficulté progressifs pour correspondre à votre expertise
+        </p>
+      </div>
+
+      <!-- Caractéristique 2 -->
+      <div class="group bg-white rounded-2xl p-8 border border-neutral-200 hover:border-primary-300 hover:shadow-xl transition-all duration-300">
+        <div class="w-14 h-14 rounded-xl bg-primary-100 flex items-center justify-center mb-6 group-hover:bg-primary-600 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-7 h-7 text-primary-600 group-hover:text-white transition-colors">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+            <circle cx="8.5" cy="8.5" r="1.5" />
+            <polyline points="21 15 16 10 5 21" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold text-neutral-900 mb-3">Imagerie Médicale</h3>
+        <p class="text-neutral-600 leading-relaxed">
+          Accédez à des ressources d'imagerie complètes, y compris des IRM, des scanners et des radiographies pour soutenir un diagnostic précis
+        </p>
+      </div>
+
+      <!-- Caractéristique 3 -->
+      <div class="group bg-white rounded-2xl p-8 border border-neutral-200 hover:border-primary-300 hover:shadow-xl transition-all duration-300">
+        <div class="w-14 h-14 rounded-xl bg-primary-100 flex items-center justify-center mb-6 group-hover:bg-primary-600 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-7 h-7 text-primary-600 group-hover:text-white transition-colors">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold text-neutral-900 mb-3">Compétition d'Équipe</h3>
+        <p class="text-neutral-600 leading-relaxed">
+          Collaborez avec vos pairs, concourez sur des classements mondiaux et apprenez ensemble dans un environnement de soutien
+        </p>
+      </div>
+
+      <!-- Caractéristique 4 -->
+      <div class="group bg-white rounded-2xl p-8 border border-neutral-200 hover:border-primary-300 hover:shadow-xl transition-all duration-300">
+        <div class="w-14 h-14 rounded-xl bg-primary-100 flex items-center justify-center mb-6 group-hover:bg-primary-600 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-7 h-7 text-primary-600 group-hover:text-white transition-colors">
+            <path d="M2 20h.01" />
+            <path d="M7 20v-4" />
+            <path d="M12 20v-8" />
+            <path d="M17 20v-6" />
+            <path d="M22 20V8" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold text-neutral-900 mb-3">Suivi des Progrès</h3>
+        <p class="text-neutral-600 leading-relaxed">
+          Surveillez vos performances avec des analyses détaillées et des informations pour identifier vos forces et vos axes d'amélioration
+        </p>
+      </div>
+
+      <!-- Caractéristique 5 -->
+      <div class="group bg-white rounded-2xl p-8 border border-neutral-200 hover:border-primary-300 hover:shadow-xl transition-all duration-300">
+        <div class="w-14 h-14 rounded-xl bg-primary-100 flex items-center justify-center mb-6 group-hover:bg-primary-600 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-7 h-7 text-primary-600 group-hover:text-white transition-colors">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+            <path d="M12 17h.01" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold text-neutral-900 mb-3">Système d'Indices</h3>
+        <p class="text-neutral-600 leading-relaxed">
+          Indices stratégiques disponibles en cas de besoin pour guider votre processus de diagnostic sans donner la réponse
+        </p>
+      </div>
+
+      <!-- Caractéristique 6 -->
+      <div class="group bg-white rounded-2xl p-8 border border-neutral-200 hover:border-primary-300 hover:shadow-xl transition-all duration-300">
+        <div class="w-14 h-14 rounded-xl bg-primary-100 flex items-center justify-center mb-6 group-hover:bg-primary-600 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-7 h-7 text-primary-600 group-hover:text-white transition-colors">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold text-neutral-900 mb-3">Récompenses & Badges</h3>
+        <p class="text-neutral-600 leading-relaxed">
+          Gagnez des points, débloquez des réalisations et montrez votre expertise médicale avec une expérience d'apprentissage gamifiée
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

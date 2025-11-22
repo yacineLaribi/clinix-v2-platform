@@ -1,117 +1,90 @@
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - CLINIX</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            border: "hsl(214.3 31.8% 91.4%)",
-            input: "hsl(214.3 31.8% 91.4%)",
-            ring: "hsl(221.2 83.2% 53.3%)",
-            background: "hsl(0 0% 100%)",
-            foreground: "hsl(222.2 84% 4.9%)",
-            primary: {
-              DEFAULT: "hsl(221.2 83.2% 53.3%)",
-              foreground: "hsl(210 40% 98%)",
-            },
-            secondary: {
-              DEFAULT: "hsl(210 40% 96.1%)",
-              foreground: "hsl(222.2 47.4% 11.2%)",
-            },
-            muted: {
-              DEFAULT: "hsl(210 40% 96.1%)",
-              foreground: "hsl(215.4 16.3% 46.9%)",
-            },
-            accent: {
-              DEFAULT: "hsl(210 40% 96.1%)",
-              foreground: "hsl(222.2 47.4% 11.2%)",
-            },
-            destructive: {
-              DEFAULT: "hsl(0 84.2% 60.2%)",
-              foreground: "hsl(210 40% 98%)",
-            },
-            blue: {
-              600: "#2563eb",
-            },
-          },
-          borderRadius: {
-            lg: "0.5rem",
-            md: "calc(0.5rem - 2px)",
-            sm: "calc(0.5rem - 4px)",
-          },
-        },
-      },
-    };
-  </script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-    body {
-      font-family: 'Inter', sans-serif;
-    }
-  </style>
-</head>
-<body class="bg-background text-foreground">
-  <div class="flex min-h-screen flex-col">
-    <header class="sticky top-0 z-50 w-full border-b bg-background">
-      <div class="container mx-auto flex h-16 items-center justify-between px-4">
-        <div class="flex items-center gap-6">
-          <a href="{% url "core:index" %}" class="flex items-center gap-2">
-            <span class="font-bold">CLINIX</span>
-          </a>
-        </div>
-        <div class="flex items-center gap-2">
-          <a href="{% url "core:index" %}">
-            <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">Login</button>
-          </a>
+{% extends 'base.html' %}
 
-        </div>
+{% block title %}Login - CLINIX{% endblock %}
+
+{% block content %}
+<div class="min-h-[calc(100vh-16rem)] flex items-center justify-center py-12 px-4 lg:px-8">
+  <div class="w-full max-w-md">
+    <!-- Logo and Header -->
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary-100 mb-4">
+        <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+        </svg>
       </div>
-    </header>
+      <h1 class="text-3xl font-bold text-neutral-900 mb-2">Welcome to CLINIX</h1>
+      <p class="text-neutral-600">Signin with the name of your team and the password on the table</p>
+    </div>
 
-    <main class="flex-1">
-      <div class="container mx-auto flex py-10 flex-col items-center justify-center px-4">
-        <div class="rounded-lg border bg-card text-card-foreground shadow-sm w-full max-w-md">
-          <div class="flex flex-col space-y-1.5 p-6">
-            <h3 class="text-2xl font-semibold leading-none tracking-tight">Sign in</h3>
-            <p class="text-sm text-muted-foreground">Enter your credentials to access your account</p>
-          </div>
-          <div class="p-6">
-            <form class="space-y-4" action="{% url 'core:login' %}" method="post">
-              {% csrf_token %}
-              <div class="space-y-2">
-                <label for="temaname" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Team Name</label>
-                <input id="temaname" name="teamname" type="text" placeholder="zenith" required class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
-              </div>
-              <div class="space-y-2">
-                <div class="flex items-center justify-between">
-                  <label for="password" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Password</label>
+    <!-- Login Card -->
+    <div class="bg-white rounded-2xl border border-neutral-200 shadow-xl overflow-hidden">
+      <div class="p-8">
+        <form class="space-y-6" action="{% url 'core:login' %}" method="post">
+          {% csrf_token %}
+          
+          <!-- Error Messages -->
+          {% if messages %}
+            <div class="space-y-2">
+              {% for message in messages %}
+                <div class="rounded-lg bg-red-50 border border-red-200 p-4 flex items-start gap-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-600 flex-shrink-0 mt-0.5">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                  </svg>
+                  <p class="text-sm text-red-800">{{ message }}</p>
                 </div>
-                <input id="password" type="password" name="password" required class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
-              </div>
-              <button type="submit" class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full">
-                Sign in
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </main>
+              {% endfor %}
+            </div>
+          {% endif %}
 
-    <footer class="border-t py-6">
-      <div class="container mx-auto flex flex-col items-center justify-between gap-4 md:flex-row px-4">
-        <p class="text-sm text-muted-foreground">© 2025 CLINIX. All rights reserved.</p>
-        <nav class="flex gap-4 text-sm text-muted-foreground">
-          <a href="#" class="hover:underline">About</a>
-          <a href="#" class="hover:underline">Contact</a>
-          <a href="#" class="hover:underline">Privacy</a>
-          <a href="#" class="hover:underline">Terms</a>
-        </nav>
+          <!-- Team Name Field -->
+          <div class="space-y-2">
+            <label for="teamname" class="block text-sm font-semibold text-neutral-900">
+              Team Name
+            </label>
+            <input 
+              id="teamname" 
+              name="teamname" 
+              type="text" 
+              placeholder="Enter your team name" 
+              required 
+              class="w-full rounded-lg border border-neutral-300 bg-white px-4 py-3 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all"
+              autocomplete="username">
+          </div>
+
+          <!-- Password Field -->
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <label for="password" class="block text-sm font-semibold text-neutral-900">
+                Password
+              </label>
+            </div>
+            <input 
+              id="password" 
+              name="password" 
+              type="password" 
+              placeholder="Enter your password"
+              required 
+              class="w-full rounded-lg border border-neutral-300 bg-white px-4 py-3 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all"
+              autocomplete="current-password">
+          </div>
+
+
+          <!-- Submit Button -->
+          <button 
+            type="submit" 
+            class="w-full inline-flex items-center justify-center rounded-lg text-base font-semibold transition-all h-12 px-6 bg-primary-600 text-white hover:bg-primary-700 active:scale-95 shadow-lg shadow-primary-600/30">
+            Sign In
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2">
+              <path d="M5 12h14"></path>
+              <path d="m12 5 7 7-7 7"></path>
+            </svg>
+          </button>
+        </form>
       </div>
-    </footer>
+    </div>
+
   </div>
-</body>
-</html>
+</div>
+{% endblock %}
