@@ -27,7 +27,10 @@ class SubmissionAdmin(admin.ModelAdmin):
         "is_false",
         "challenge",
         "user",
+        "challenge__author",
+
         "submission_time",
+        
     )
 
     search_fields = (
