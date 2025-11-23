@@ -1,8 +1,10 @@
 from django.contrib import admin
-from .models import CustomUser, Challenge, Hint, Submission , UserHint
+from .models import CustomUser, Challenge, Hint, Submission , UserHint ,Phase
 # Register your models here.
 
 admin.site.register(CustomUser)
+admin.site.register(Phase)
+
 @admin.register(Challenge)
 class ChallengeAdmin(admin.ModelAdmin):
     list_filter = ('is_visible','author')  # Replace with actual fields to filter by
@@ -12,6 +14,7 @@ admin.site.register(UserHint)
 from django.contrib import admin
 from django.utils.html import format_html
 from .models import Submission
+
 
 @admin.register(Submission)
 class SubmissionAdmin(admin.ModelAdmin):

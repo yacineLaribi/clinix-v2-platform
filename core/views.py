@@ -32,17 +32,21 @@ def logout_view(request):
     logout(request)
     return redirect('core:login')  # back to login page
 
-from .models import Challenge
+from .models import Challenge , Phase
 def challenges(request):
     if not request.user.is_authenticated:
         messages.error(request, 'You have to login to access this page')
         return redirect('core:login')
 
     challenges = Challenge.objects.filter(is_visible=True)
+    challenges = challenges.filter(phase__is_active=True)
+    
+    phase = Phase.objects.filter(is_active=True).first()
+
     for challenge in challenges:
         challenge.is_submitted = Submission.objects.filter(user=request.user, challenge=challenge).exists()
 
-    return render(request, 'core/challenges.html', {'challenges': challenges})
+    return render(request, 'core/challenges.html', {'challenges': challenges , 'phase':phase})
 
 from .models import Hint, Submission
 from django.db.models import Sum
