@@ -101,15 +101,15 @@
             <img src="{% static 'logo.png' %}" alt="CLINIX" class="w-36 h-36 object-contain">
             <span class="sr-only">CLINIX</span>
           </a>
-          <nav class="hidden md:flex items-center gap-6">
-            <a href="{% url 'core:challenges' %}" class="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition-colors">Challenges</a>
-            <a href="{% url "core:leaderboard" %}" class="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition-colors">Leaderboard</a>
+          <nav class="flex items-center gap-6">
+            <a href="{% url 'core:challenges' %}" class="hidden md:block text-sm font-medium text-neutral-600 hover:text-neutral-900 transition-colors">Challenges</a>
+            <a href="{% url "core:leaderboard" %}" class="hidden md:block text-sm font-medium text-neutral-600 hover:text-neutral-900 transition-colors">Leaderboard</a>
             <a href="{% url "core:profile" %}" class="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition-colors">Profile</a>
           </nav>
         </div>
         <div class="flex items-center gap-3">
           {% if request.user.is_authenticated %}
-            <span class="text-sm text-neutral-600 hidden sm:inline">Welcome, <span class="font-semibold text-neutral-900">{{ request.user.username }} </span> 
+            <span class="text-sm text-neutral-600 inline">Welcome, <span class="font-semibold text-neutral-900">{{ request.user.username }} </span> 
             <span>| votre score : <span class="text-blue-700 font-bold inline-flex items-center gap-2">{{ request.user.score }}
             </span></span>
           </span>
