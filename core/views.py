@@ -153,7 +153,6 @@ def admin_dashboard(request):
     else:
         # Regular admin sees only their authored challenges and submissions
         challenges = Challenge.objects.filter(author=user)
-        challenges = challenges.filter(phase__is_active=True)
 
         submissions = Submission.objects.filter(challenge__author=user)
     
