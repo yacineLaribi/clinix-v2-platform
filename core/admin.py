@@ -1,6 +1,8 @@
 from django.contrib import admin
 from .models import CustomUser, Challenge, Hint, Submission , UserHint ,Phase
 # Register your models here.
+from django.utils.safestring import mark_safe
+
 
 admin.site.register(CustomUser)
 admin.site.register(Phase)
@@ -44,11 +46,19 @@ class SubmissionAdmin(admin.ModelAdmin):
 
     readonly_fields = ("submission_time",)
 
+
     def status_indicator(self, obj):
         if obj.is_correct:
-            return format_html('<span style="color: #22c55e; font-weight:600;">✔ Correct</span>')
-        if obj.is_false:
-            return format_html('<span style="color: #ef4444; font-weight:600;">✘ Wrong</span>')
-        return format_html('<span style="color:#6b7280;">Pending</span>')
+            return mark_safe(
+                '<span style="color: #22c55e; font-weight:600;">✔ Correct</span>'
+            )
 
+        if obj.is_false:
+            return mark_safe(
+                '<span style="color: #ef4444; font-weight:600;">✘ Wrong</span>'
+            )
+
+        return mark_safe(
+            '<span style="color:#6b7280;">Pending</span>'
+        )
     status_indicator.short_description = "Status"

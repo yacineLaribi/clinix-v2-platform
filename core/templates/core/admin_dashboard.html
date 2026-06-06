@@ -39,8 +39,8 @@
             <div class="flex items-start justify-between gap-4">
               <div>
                 <h2 class="text-2xl font-bold text-neutral-900">{{ challenge.title }}</h2>
-                <p class="text-sm text-neutral-600 mt-2">
-                  <span class="inline-flex items-center gap-2">
+                <div class="flex flex-wrap items-center gap-3 mt-2">
+                  <span class="inline-flex items-center gap-2 text-sm text-neutral-600">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
                       <circle cx="9" cy="7" r="4"></circle>
@@ -48,7 +48,14 @@
                     </svg>
                     <strong>{{ challenge.submission_count }}</strong> submission(s)
                   </span>
-                </p>
+                  <!-- Challenge Points -->
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-semibold">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    </svg>
+                    {{ challenge.points }} pts
+                  </span>
+                </div>
               </div>
               <div class="text-right">
                 <div class="inline-block px-4 py-2 rounded-lg bg-primary-100 text-primary-700 font-semibold">
@@ -64,7 +71,7 @@
               <div 
                 class="submission-card cursor-pointer bg-neutral-50 border border-neutral-200 rounded-xl p-5 hover:border-primary-300 hover:bg-primary-50 transition-all group"
                 data-submission-id="{{ submission.id }}"
-                data-team-name="{{ submission.team_name }}"
+                data-team-name="{{ submission.author }}"
                 data-solution="{{ submission.solution }}"
                 data-submission-time="{{ submission.submission_time }}"
                 data-is-correct="{{ submission.is_correct }}"
@@ -72,6 +79,7 @@
                 data-hints-count="{{ submission.total_hints_count }}"
                 data-hints-value="{{ submission.total_hints_value }}"
                 data-challenge-title="{{ challenge.title }}"
+                data-challenge-points="{{ challenge.points }}"
               >
                 <div class="flex items-start justify-between gap-4">
                   <!-- Left Content -->
@@ -197,7 +205,7 @@
       </div>
 
       <!-- Modal Content -->
-      <div class="px-6 py-6 space-y-6 max-h-96 overflow-y-auto">
+      <div class="px-6 py-6 space-y-6 max-h-[65vh] overflow-y-auto">
         <!-- Team Info -->
         <div>
           <div class="flex items-center gap-3 mb-2">
@@ -328,7 +336,11 @@
       document.getElementById('modal-team-name').textContent = card.dataset.teamName;
       document.getElementById('modal-submission-time').textContent = card.dataset.submissionTime;
       document.getElementById('modal-solution').textContent = card.dataset.solution;
-      document.getElementById('modal-challenge-title').textContent = 'Challenge: ' + card.dataset.challengeTitle;
+
+      // Show challenge title + points in modal subtitle
+      const points = card.dataset.challengePoints;
+      document.getElementById('modal-challenge-title').textContent =
+        'Challenge: ' + card.dataset.challengeTitle + (points ? '  ·  ' + points + ' pts' : '');
 
       // Fill hints
       const hintsContainer = document.getElementById('modal-hints-container');
@@ -394,7 +406,7 @@
       formData.append('is_correct', isCorrect.toString());
       formData.append('is_false', isFalse.toString());
 
-      fetch(`/admin/submission/${submissionId}/update/`, {
+      fetch(`/admin-access/submission/${submissionId}/update/`, {
         method: 'POST',
         body: formData,
         headers: {

@@ -153,6 +153,8 @@ def admin_dashboard(request):
     else:
         # Regular admin sees only their authored challenges and submissions
         challenges = Challenge.objects.filter(author=user)
+        challenges = challenges.filter(phase__is_active=True)
+
         submissions = Submission.objects.filter(challenge__author=user)
     
     # Prepare data for display
@@ -191,6 +193,7 @@ def admin_dashboard(request):
         if submissions_list:
             challenges_data.append({
                 'id': challenge.id,
+                'points': challenge.points,
                 'title': challenge.title,
                 'submissions': submissions_list,
                 'submission_count': len(submissions_list)
