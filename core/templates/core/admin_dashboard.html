@@ -1,0 +1,498 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard - CLINIX{% endblock %}
+
+{% block content %}
+<div class="container mx-auto py-8 px-4 lg:px-8">
+  <!-- Header Section -->
+  <div class="mb-8">
+    <div class="flex items-center gap-4">
+      <div class="w-12 h-12 rounded-lg bg-primary-100 flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary-600">
+          <path d="M12 3v18"></path>
+          <path d="M5 9h14"></path>
+          <path d="M5 15h14"></path>
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-4xl font-bold tracking-tight text-neutral-900">
+          Admin Dashboard
+        </h1>
+        <p class="text-lg text-neutral-600 mt-2">
+          {% if is_supreme_admin %}
+            Supreme Admin - Viewing all submissions
+          {% else %}
+            Manage submissions for your clinical cases
+          {% endif %}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  {% if challenges_data %}
+    <!-- Challenges List -->
+    <div class="space-y-8">
+      {% for challenge in challenges_data %}
+        <div class="bg-white rounded-2xl border border-neutral-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+          <!-- Challenge Header -->
+          <div class="bg-gradient-to-r from-primary-50 to-primary-100/50 border-b border-neutral-200 p-6">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <h2 class="text-2xl font-bold text-neutral-900">{{ challenge.title }}</h2>
+                <p class="text-sm text-neutral-600 mt-2">
+                  <span class="inline-flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="9" cy="7" r="4"></circle>
+                      <path d="M22 16c0 1-1 3-6 3s-6-2-6-3"></path>
+                    </svg>
+                    <strong>{{ challenge.submission_count }}</strong> submission(s)
+                  </span>
+                </p>
+              </div>
+              <div class="text-right">
+                <div class="inline-block px-4 py-2 rounded-lg bg-primary-100 text-primary-700 font-semibold">
+                  ID: {{ challenge.id }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Submissions Cards -->
+          <div class="p-6 space-y-4">
+            {% for submission in challenge.submissions %}
+              <div 
+                class="submission-card cursor-pointer bg-neutral-50 border border-neutral-200 rounded-xl p-5 hover:border-primary-300 hover:bg-primary-50 transition-all group"
+                data-submission-id="{{ submission.id }}"
+                data-team-name="{{ submission.team_name }}"
+                data-solution="{{ submission.solution }}"
+                data-submission-time="{{ submission.submission_time }}"
+                data-is-correct="{{ submission.is_correct }}"
+                data-is-false="{{ submission.is_false }}"
+                data-hints-count="{{ submission.total_hints_count }}"
+                data-hints-value="{{ submission.total_hints_value }}"
+                data-challenge-title="{{ challenge.title }}"
+              >
+                <div class="flex items-start justify-between gap-4">
+                  <!-- Left Content -->
+                  <div class="flex-1">
+                    <div class="flex items-center gap-3 mb-2">
+                      <div class="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary-600">
+                          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                          <circle cx="9" cy="7" r="4"></circle>
+                          <path d="M22 16c0 1-1 3-6 3s-6-2-6-3"></path>
+                        </svg>
+                      </div>
+                      <div>
+                        <p class="font-bold text-neutral-900 group-hover:text-primary-700 transition-colors">{{ submission.team_name }}</p>
+                        <p class="text-xs text-neutral-600">{{ submission.submission_time|date:"d M Y, H:i" }}</p>
+                      </div>
+                    </div>
+                    
+                    <div class="ml-13 space-y-2">
+                      <div>
+                        <p class="text-xs text-neutral-600 font-medium mb-1">Solution Preview</p>
+                        <p class="text-sm text-neutral-700 line-clamp-2">{{ submission.solution|truncatewords:20 }}</p>
+                      </div>
+                      <div class="flex flex-wrap items-center gap-3">
+                        <span class="inline-flex items-center gap-1 text-xs font-medium text-neutral-700">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 19L6 5m12 14L18 5M6 9h12M6 17h12"></path>
+                          </svg>
+                          <span class="font-semibold">{{ submission.total_hints_count }}</span> hint(s) ({{ submission.total_hints_value }} pts)
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Right Content - Status -->
+                  <div class="flex flex-col items-end gap-3">
+                    <div>
+                      {% if submission.is_correct %}
+                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-semibold">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                          </svg>
+                          Correct
+                        </span>
+                      {% elif submission.is_false %}
+                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-red-100 text-red-700 text-xs font-semibold">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="15" y1="9" x2="9" y2="15"></line>
+                            <line x1="9" y1="9" x2="15" y2="15"></line>
+                          </svg>
+                          False
+                        </span>
+                      {% else %}
+                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-yellow-100 text-yellow-700 text-xs font-semibold">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                          </svg>
+                          Pending
+                        </span>
+                      {% endif %}
+                    </div>
+                    <button 
+                      type="button"
+                      class="open-modal-btn inline-flex items-center justify-center rounded-lg px-3 py-2 text-sm font-semibold transition-all h-9 bg-primary-600 text-white hover:bg-primary-700 active:scale-95"
+                      data-submission-id="{{ submission.id }}"
+                    >
+                      View Details
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Store hints data in data attributes -->
+              <div style="display: none;" class="submission-hints" data-submission-id="{{ submission.id }}">
+                {% for hint in submission.hints_used %}
+                  <div class="hint-item" data-hint-title="{{ hint.title }}" data-hint-value="{{ hint.value }}" data-hint-number="{{ hint.number }}" data-hint-used-at="{{ hint.used_at }}"></div>
+                {% endfor %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <!-- Empty State -->
+    <div class="bg-white rounded-2xl border border-neutral-200 p-12 text-center">
+      <div class="w-16 h-16 rounded-full bg-neutral-100 flex items-center justify-center mx-auto mb-4">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-neutral-400">
+          <path d="M6 9L6 5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4M6 9h12M6 9l6 6m6-6l-6 6"></path>
+        </svg>
+      </div>
+      <h3 class="text-2xl font-bold text-neutral-900 mb-2">No Submissions Yet</h3>
+      <p class="text-neutral-600">
+        {% if is_supreme_admin %}
+          No submissions have been made to any challenges yet.
+        {% else %}
+          You haven't authored any challenges or there are no submissions for your challenges yet.
+        {% endif %}
+      </p>
+    </div>
+  {% endif %}
+</div>
+
+<!-- Submission Details Modal -->
+<div id="submission-modal" class="hidden fixed inset-0 z-50 overflow-y-auto" style="background-color: rgba(0, 0, 0, 0.5);">
+  <div class="flex min-h-screen items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full transform transition-all">
+      <!-- Modal Header -->
+      <div class="bg-gradient-to-r from-primary-50 to-primary-100/50 border-b border-neutral-200 px-6 py-6 flex items-start justify-between">
+        <div>
+          <h2 class="text-2xl font-bold text-neutral-900">Submission Details</h2>
+          <p id="modal-challenge-title" class="text-sm text-neutral-600 mt-1"></p>
+        </div>
+        <button id="close-modal-btn" class="text-neutral-400 hover:text-neutral-600 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Modal Content -->
+      <div class="px-6 py-6 space-y-6 max-h-96 overflow-y-auto">
+        <!-- Team Info -->
+        <div>
+          <div class="flex items-center gap-3 mb-2">
+            <div class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary-600">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M22 16c0 1-1 3-6 3s-6-2-6-3"></path>
+              </svg>
+            </div>
+            <div>
+              <p class="text-xs text-neutral-600 font-medium">Team</p>
+              <p id="modal-team-name" class="text-lg font-bold text-neutral-900"></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submission Time -->
+        <div>
+          <p class="text-xs text-neutral-600 font-medium mb-2">Submission Time</p>
+          <p id="modal-submission-time" class="text-sm text-neutral-700"></p>
+        </div>
+
+        <!-- Student's Answer/Solution -->
+        <div>
+          <p class="text-xs text-neutral-600 font-medium mb-2">Team's Answer/Solution</p>
+          <div class="bg-neutral-50 rounded-xl p-4 border border-neutral-200">
+            <p id="modal-solution" class="text-sm text-neutral-700 whitespace-pre-wrap break-words"></p>
+          </div>
+        </div>
+
+        <!-- Hints Used -->
+        <div>
+          <p class="text-xs text-neutral-600 font-medium mb-3">Hints Used</p>
+          <div id="modal-hints-container" class="space-y-2">
+            <!-- Hints will be populated here -->
+          </div>
+        </div>
+
+        <!-- Status & Actions -->
+        <div class="bg-neutral-50 rounded-xl p-4 border border-neutral-200">
+          <p class="text-xs text-neutral-600 font-medium mb-4">Mark Submission As</p>
+          <div class="flex gap-3">
+            <button 
+              type="button"
+              id="modal-mark-correct-btn"
+              class="flex-1 inline-flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-semibold transition-all bg-green-100 text-green-700 hover:bg-green-200 active:scale-95"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              Correct
+            </button>
+
+            <button 
+              type="button"
+              id="modal-mark-false-btn"
+              class="flex-1 inline-flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-semibold transition-all bg-red-100 text-red-700 hover:bg-red-200 active:scale-95"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="15" y1="9" x2="9" y2="15"></line>
+                <line x1="9" y1="9" x2="15" y2="15"></line>
+              </svg>
+              False
+            </button>
+
+            <button 
+              type="button"
+              id="modal-clear-status-btn"
+              class="flex-1 inline-flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-semibold transition-all bg-neutral-200 text-neutral-700 hover:bg-neutral-300 active:scale-95"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="16"></line>
+                <line x1="8" y1="12" x2="16" y2="12"></line>
+              </svg>
+              Clear
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || 
+                      getCookie('csrftoken');
+    
+    const modal = document.getElementById('submission-modal');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+    const openModalBtns = document.querySelectorAll('.open-modal-btn');
+    let currentSubmissionId = null;
+
+    // Open Modal
+    openModalBtns.forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const submissionId = this.dataset.submissionId;
+        openModal(submissionId);
+      });
+    });
+
+    // Close Modal
+    closeModalBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+
+    // Keyboard close
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+        closeModal();
+      }
+    });
+
+    function openModal(submissionId) {
+      const card = document.querySelector(`.submission-card[data-submission-id="${submissionId}"]`);
+      if (!card) return;
+
+      currentSubmissionId = submissionId;
+
+      // Fill in modal data
+      document.getElementById('modal-team-name').textContent = card.dataset.teamName;
+      document.getElementById('modal-submission-time').textContent = card.dataset.submissionTime;
+      document.getElementById('modal-solution').textContent = card.dataset.solution;
+      document.getElementById('modal-challenge-title').textContent = 'Challenge: ' + card.dataset.challengeTitle;
+
+      // Fill hints
+      const hintsContainer = document.getElementById('modal-hints-container');
+      hintsContainer.innerHTML = '';
+      
+      const hintsDiv = document.querySelector(`.submission-hints[data-submission-id="${submissionId}"]`);
+      const hintItems = hintsDiv?.querySelectorAll('.hint-item') || [];
+
+      if (hintItems.length === 0) {
+        hintsContainer.innerHTML = '<p class="text-sm text-neutral-600">No hints used</p>';
+      } else {
+        hintItems.forEach(hint => {
+          const hintHTML = `
+            <div class="bg-neutral-50 rounded-lg p-3 border border-neutral-200">
+              <div class="flex items-start justify-between gap-2">
+                <div>
+                  <p class="text-sm font-semibold text-neutral-900">${hint.dataset.hintTitle}</p>
+                  <p class="text-xs text-neutral-600 mt-1">Hint #${hint.dataset.hintNumber}</p>
+                </div>
+                <span class="inline-flex items-center gap-1 text-xs font-medium bg-primary-100 text-primary-700 px-2 py-1 rounded">
+                  ${hint.dataset.hintValue} pts
+                </span>
+              </div>
+            </div>
+          `;
+          hintsContainer.insertAdjacentHTML('beforeend', hintHTML);
+        });
+      }
+
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      modal.classList.add('hidden');
+      document.body.style.overflow = '';
+      currentSubmissionId = null;
+    }
+
+    // Mark Correct
+    document.getElementById('modal-mark-correct-btn').addEventListener('click', function() {
+      if (currentSubmissionId) {
+        updateSubmissionStatus(currentSubmissionId, true, false);
+      }
+    });
+
+    // Mark False
+    document.getElementById('modal-mark-false-btn').addEventListener('click', function() {
+      if (currentSubmissionId) {
+        updateSubmissionStatus(currentSubmissionId, false, true);
+      }
+    });
+
+    // Clear Status
+    document.getElementById('modal-clear-status-btn').addEventListener('click', function() {
+      if (currentSubmissionId) {
+        updateSubmissionStatus(currentSubmissionId, false, false);
+      }
+    });
+
+    function updateSubmissionStatus(submissionId, isCorrect, isFalse) {
+      const formData = new FormData();
+      formData.append('is_correct', isCorrect.toString());
+      formData.append('is_false', isFalse.toString());
+
+      fetch(`/admin/submission/${submissionId}/update/`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-CSRFToken': csrftoken,
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // Update the card UI
+          const card = document.querySelector(`.submission-card[data-submission-id="${submissionId}"]`);
+          if (card) {
+            updateCardStatus(card, data);
+          }
+          showSuccessMessage('Submission status updated successfully');
+          closeModal();
+        } else {
+          showErrorMessage(data.error || 'Failed to update submission');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        showErrorMessage('An error occurred while updating the submission');
+      });
+    }
+
+    function updateCardStatus(card, data) {
+      const isCorrect = data.is_correct;
+      const isFalse = data.is_false;
+
+      // Update data attributes
+      card.dataset.isCorrect = isCorrect;
+      card.dataset.isFalse = isFalse;
+
+      // Find and update status badge
+      const statusDiv = card.querySelector('div:last-child > div:first-child');
+      
+      let statusHTML = '';
+      if (isCorrect) {
+        statusHTML = `
+          <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-semibold">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Correct
+          </span>
+        `;
+      } else if (isFalse) {
+        statusHTML = `
+          <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-red-100 text-red-700 text-xs font-semibold">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="15" y1="9" x2="9" y2="15"></line>
+              <line x1="9" y1="9" x2="15" y2="15"></line>
+            </svg>
+            False
+          </span>
+        `;
+      } else {
+        statusHTML = `
+          <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-yellow-100 text-yellow-700 text-xs font-semibold">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            Pending
+          </span>
+        `;
+      }
+
+      statusDiv.innerHTML = statusHTML;
+    }
+
+    function showSuccessMessage(message) {
+      console.log('Success:', message);
+      // Toast message will be shown by Django messages framework
+    }
+
+    function showErrorMessage(message) {
+      console.error('Error:', message);
+      alert(message);
+    }
+
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+  });
+</script>
+{% endblock %}

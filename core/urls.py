@@ -15,7 +15,9 @@ urlpatterns = [
     path('use-hint/<int:hint_id>/', views.use_hint, name='use_hint'),
     path('leaderboard/', views.leaderboard, name='leaderboard'),
     path('api/leaderboard/', views.api_leaderboard, name='api_leaderboard'),
-
+    # Admin Dashboard Routes
+    path('admin-access/dashboard/', views.admin_dashboard, name='admin_dashboard'),
+    path('admin-access/submission/<int:submission_id>/update/', views.update_submission_status, name='update_submission_status'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
